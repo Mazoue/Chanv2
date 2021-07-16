@@ -1,0 +1,34 @@
+﻿@page "/board/{boardId}"
+
+<h1>@boardId</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        <th>Thread Id</th>
+        <th>Subject</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if(BoarCatalogues != null)
+    {
+        @foreach (var page in BoarCatalogues.ToList())
+        {
+            foreach (var thread in page.Threads)
+            {
+                <tr>
+                    <td><button type="button" @onclick="@(async () => await DownloadThreadPosts(thread))">Download All</button></td>
+                    <td><button type="button" @onclick="@(async () => await ExpandThreadPosts(thread))">Expand</button></td>
+                    <td>@thread.No</td>
+                    <td>@thread.Sub</td>
+                    <td>@thread.Com</td>
+                </tr>
+            }
+
+        }
+    }
+    </tbody>
+</table>
