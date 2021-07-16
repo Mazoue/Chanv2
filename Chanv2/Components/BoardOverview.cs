@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Chanv2.DataModels;
+﻿using Chanv2.DataModels;
 using Chanv2.Interfaces;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc.Routing;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Chanv2.Pages
 {
@@ -19,16 +16,15 @@ namespace Chanv2.Pages
 
         private IEnumerable<Catalogue> BoarCatalogues { get; set; }
 
-
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
-            BoarCatalogues = await BoardService.GetBoardCatalog(boardId);
+            if (boardId != null)
+            {
+                BoarCatalogues = await BoardService.GetBoardCatalog(boardId);
+                
+            }
         }
-
-        private void BoardCatalogue_Changed()
-        {
-
-        }
+             
 
         protected async Task DownloadThreadPosts(Thread currentThread)
         {
@@ -42,10 +38,10 @@ namespace Chanv2.Pages
 
         protected async Task ExpandThreadPosts(Thread currentThread)
         {
-        //    FullBoard.CurrentThreadId = currentThread.no;
-        //    FullBoard.CurrentThreadName = !string.IsNullOrEmpty(currentThread.sub) ? currentThread.sub : "Misc";
-        //    await GetThreadPosts(FullBoard.CurrentBoard, currentThread.no).ConfigureAwait(false);
-        //    FullBoard.CurrentStage = LoadingStage.Posts;
+            //    FullBoard.CurrentThreadId = currentThread.no;
+            //    FullBoard.CurrentThreadName = !string.IsNullOrEmpty(currentThread.sub) ? currentThread.sub : "Misc";
+            //    await GetThreadPosts(FullBoard.CurrentBoard, currentThread.no).ConfigureAwait(false);
+            //    FullBoard.CurrentStage = LoadingStage.Posts;
         }
 
 
