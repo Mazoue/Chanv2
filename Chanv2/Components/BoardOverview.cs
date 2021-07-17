@@ -14,6 +14,9 @@ namespace Chanv2.Pages
         [Inject]
         private IBoardService BoardService { get; set; }
 
+        [Inject]
+        private NavigationManager NavManager { get; set; }
+
         private IEnumerable<Catalogue> BoarCatalogues { get; set; }
 
         protected override async Task OnParametersSetAsync()
@@ -38,10 +41,8 @@ namespace Chanv2.Pages
 
         protected async Task ExpandThreadPosts(Thread currentThread)
         {
-            //    FullBoard.CurrentThreadId = currentThread.no;
-            //    FullBoard.CurrentThreadName = !string.IsNullOrEmpty(currentThread.sub) ? currentThread.sub : "Misc";
-            //    await GetThreadPosts(FullBoard.CurrentBoard, currentThread.no).ConfigureAwait(false);
-            //    FullBoard.CurrentStage = LoadingStage.Posts;
+            var href = $"/thread/{boardId}/{currentThread.No}";
+            NavManager.NavigateTo(href);
         }
 
 

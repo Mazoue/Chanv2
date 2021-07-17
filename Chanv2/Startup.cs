@@ -29,6 +29,14 @@ namespace Chanv2
             {
                 client.BaseAddress = new Uri("https://a.4cdn.org/");
             });
+            services.AddHttpClient<IThreadService, ThreadService>(client =>
+            {
+                client.BaseAddress = new Uri("https://a.4cdn.org/");
+            });
+            services.AddHttpClient<IDownloadService, DownloadService>(client =>
+            {
+                client.BaseAddress = new Uri("https://i.4cdn.org/");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
