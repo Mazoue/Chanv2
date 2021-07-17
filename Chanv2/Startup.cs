@@ -1,3 +1,6 @@
+using System;
+using Chanv2.Interfaces;
+using Chanv2.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +24,19 @@ namespace Chanv2
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddHttpClient<IBoardService,BoardService>(client =>
+            {
+                client.BaseAddress = new Uri("https://a.4cdn.org/");
+            });
+            services.AddHttpClient<IThreadService, ThreadService>(client =>
+            {
+                client.BaseAddress = new Uri("https://a.4cdn.org/");
+            });
+            services.AddHttpClient<IDownloadService, DownloadService>(client =>
+            {
+                client.BaseAddress = new Uri("https://i.4cdn.org/");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
