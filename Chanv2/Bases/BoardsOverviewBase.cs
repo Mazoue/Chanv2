@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Chanv2.DataModels;
+﻿using Chanv2.DataModels;
 using Chanv2.Interfaces;
 using Microsoft.AspNetCore.Components;
+using System.Threading.Tasks;
 
 namespace Chanv2.Bases
 {

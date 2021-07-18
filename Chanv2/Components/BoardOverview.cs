@@ -3,13 +3,14 @@ using Chanv2.Interfaces;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Chanv2.Pages
 {
     public partial class BoardOverview
     {
         [Parameter]
-        public string boardId { get; set; }
+        public string BoardId { get; set; }
 
         [Inject]
         private IBoardService BoardService { get; set; }
@@ -21,28 +22,22 @@ namespace Chanv2.Pages
 
         protected override async Task OnParametersSetAsync()
         {
-            if (boardId != null)
+            if (BoardId != null)
             {
-                BoarCatalogues = await BoardService.GetBoardCatalog(boardId);
-                
+                BoarCatalogues = await BoardService.GetBoardCatalog(BoardId);
+
             }
         }
-             
 
         protected async Task DownloadThreadPosts(Thread currentThread)
         {
-            //FullBoard.CurrentThreadId = currentThread.no;
-            //FullBoard.CurrentThreadName = !string.IsNullOrEmpty(currentThread.sub) ? currentThread.sub : "Misc";
-            //await GetThreadPosts(FullBoard.CurrentBoard, currentThread.no).ConfigureAwait(false);
-            //await ParseBoardPosts(FullBoard.Posts, FullBoard.CurrentBoard, FullBoard.CurrentThreadName)
-            //    .ConfigureAwait(false);
-
         }
 
-        protected async Task ExpandThreadPosts(Thread currentThread)
+        protected void ExpandThreadPosts(Thread currentThread)
         {
-            var href = $"/thread/{boardId}/{currentThread.No}";
-            NavManager.NavigateTo(href);
+            NavManager.NavigateTo(!string.IsNullOrEmpty(currentThread.Sub)
+                ? $"/thread/{BoardId}/{currentThread.No}/{HttpUtility.UrlEncode(currentThread.Sub)}"
+                : $"/thread/{BoardId}/{currentThread.No}");
         }
 
 

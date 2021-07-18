@@ -1,6 +1,6 @@
 ﻿@page "/board/{boardId}"
 
-<h1>@boardId</h1>
+<h1>@BoardId</h1>
 
 <table class="table">
     <thead>
@@ -21,7 +21,7 @@
             {
                 <tr>
                     <td><button type="button" @onclick="@(async () => await DownloadThreadPosts(thread))">Download All</button></td>
-                    <td><button type="button" @onclick="@(async () => await ExpandThreadPosts(thread))">Expand</button></td>
+                    <td><button type="button" @onclick="@(() => ExpandThreadPosts(thread))">Expand</button></td>
                     <td>@thread.No</td>
                     <td>@thread.Sub</td>
                     <td>@thread.Com</td>

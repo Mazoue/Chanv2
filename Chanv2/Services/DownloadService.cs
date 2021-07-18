@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Chanv2.Services
@@ -15,7 +16,7 @@ namespace Chanv2.Services
             _httpClient = httpClient;
         }
 
-        public async Task<string> DownloadFile(string fileUrl, string destination)
+        public async Task<string> DownloadFileAsync(string fileUrl, string destination)
         {
             try
             {
@@ -41,6 +42,22 @@ namespace Chanv2.Services
                 throw;
             }
             return "done";
+        }
+
+        public string CleanInput(string input)
+        {
+            // Replace invalid characters with empty strings.
+            try
+            {
+                return Regex.Replace(input, @"[^\w\.@-]", "",
+                    RegexOptions.None, TimeSpan.FromSeconds(1.5));
+            }
+            // If we timeout when replacing invalid characters, 
+            // we should return Empty.
+            catch (RegexMatchTimeoutException)
+            {
+                return string.Empty;
+            }
         }
     }
 }

@@ -17,7 +17,6 @@ namespace Chanv2.Services
             _httpClient = httpClient;
         }
 
-
         public async Task<AllBoards> GetAllBoardsDetails()
         {
             try
@@ -44,6 +43,5 @@ namespace Chanv2.Services
                 throw;
             }
         }
-
     }
 }

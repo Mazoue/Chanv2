@@ -1,9 +1,8 @@
-﻿using System.Text.Json;
-using Chanv2.DataModels;
+﻿using Chanv2.DataModels;
 using Chanv2.Interfaces;
-
 using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Chanv2.Services
@@ -20,8 +19,6 @@ namespace Chanv2.Services
         {
             try
             {
-               
-
                 return await JsonSerializer.DeserializeAsync<Posts>
                     (await _httpClient.GetStreamAsync($"{boardId}/thread/{threadId}.json"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             }

@@ -1,4 +1,3 @@
-using System;
 using Chanv2.Interfaces;
 using Chanv2.Services;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace Chanv2
 {
@@ -25,18 +25,20 @@ namespace Chanv2
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddHttpClient<IBoardService,BoardService>(client =>
-            {
-                client.BaseAddress = new Uri("https://a.4cdn.org/");
-            });
+            services.AddHttpClient<IBoardService, BoardService>(client =>
+             {
+                 client.BaseAddress = new Uri(Configuration.GetSection("4ChanBaseUrls")["BoardBase"]);
+             });
             services.AddHttpClient<IThreadService, ThreadService>(client =>
             {
-                client.BaseAddress = new Uri("https://a.4cdn.org/");
+                client.BaseAddress = new Uri(Configuration.GetSection("4ChanBaseUrls")["BoardBase"]);
             });
             services.AddHttpClient<IDownloadService, DownloadService>(client =>
             {
-                client.BaseAddress = new Uri("https://i.4cdn.org/");
+                client.BaseAddress = new Uri(Configuration.GetSection("4ChanBaseUrls")["ImageBase"]);
             });
+
+            services.AddScoped<IFileSystemService, FileSystemService>(x => new FileSystemService(baseFolder: Configuration.GetSection("FileSystemSettings")["DownloadServiceBaseFolder"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
