@@ -2,6 +2,15 @@
 
 <h1>@BoardId</h1>
 
+<table class="layouttable" style="width:100%">
+    <tr>
+        <td> <input type="checkbox" @onchange="eventArgs => { CheckAllClicked(); }" />Check All</td>
+        <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadThread().ConfigureAwait(false))"> Download</button></td>
+    </tr>
+</table>
+<br />
+<br />
+
 <table class="table">
     <thead>
     <tr>
@@ -19,15 +28,14 @@
         {
             foreach (var thread in page.Threads)
             {
-                <tr>
-                    <td><button type="button" @onclick="@(async () => await DownloadThreadPosts(thread))">Download All</button></td>
+                <tr>                    
                     <td><button type="button" @onclick="@(() => ExpandThreadPosts(thread))">Expand</button></td>
+                    <td> <input @bind-value="thread.Checked" type="checkbox" /></td>                        
                     <td>@thread.No</td>
                     <td>@thread.Sub</td>
                     <td>@thread.Com</td>
                 </tr>
             }
-
         }
     }
     </tbody>

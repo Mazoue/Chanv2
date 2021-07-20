@@ -20,15 +20,6 @@ namespace Chanv2.Services
         {
             try
             {
-                var directoryName = Path.GetDirectoryName(destination);
-                if (!string.IsNullOrEmpty(directoryName))
-                {
-                    if (!Directory.Exists(directoryName))
-                    {
-                        System.IO.Directory.CreateDirectory(directoryName);
-                    }
-                }
-
                 using var result = await _httpClient.GetAsync(fileUrl).ConfigureAwait(false);
                 if (result.IsSuccessStatusCode)
                 {
@@ -39,7 +30,7 @@ namespace Chanv2.Services
             }
             catch (Exception ex)
             {
-                throw;
+                return "failed";
             }
             return "done";
         }

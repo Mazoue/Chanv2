@@ -1,6 +1,7 @@
 ﻿using Chanv2.DataModels;
 using Chanv2.Interfaces;
 using Microsoft.AspNetCore.Components;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -19,14 +20,12 @@ namespace Chanv2.Pages
         [Inject]
         private IThreadService ThreadService { get; set; }
 
-        [Inject]
-        private IDownloadService DownloadService { get; set; }
-        [Inject]
-        private IFileSystemService FileSystemService { get; set; }
-
         private Posts Posts { get; set; }
+       
 
         private string DisplayTitle { get; set; }
+
+        private DownloadOverview DownloadOverview { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -44,18 +43,16 @@ namespace Chanv2.Pages
         {
             return bytes / 1024;
         }
-
-        protected async Task DownloadPost(Post post)
+        
+        void CheckAllClicked()
         {
-            var threadName = DownloadService.CleanInput(ThreadTitle);
-            var postName = DownloadService.CleanInput(post.filename);
-
-            var baseFolder = FileSystemService.CreateFileDestination(BoardId, threadName);
-            var filePath = FileSystemService.GenerateFilePath(baseFolder, postName, post.ext);
-
-            var fileUrl = $"{BoardId}/{post.tim}{post.ext}";
-            var downloadResult = await DownloadService.DownloadFileAsync(fileUrl, filePath);
-
+            for(var index = 0; index < Posts.posts.ToList().Count; index++)
+            {
+                if(Posts.posts[index].fsize > 1) { 
+                Posts.posts[index ].Checked = true;
+                }
+            }
+            StateHasChanged();
         }
 
     }

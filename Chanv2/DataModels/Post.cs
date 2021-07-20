@@ -25,5 +25,6 @@
         public int replies { get; set; }
         public int images { get; set; }
         public int unique_ips { get; set; }
+        public bool Checked { get; set; }
     }
 }

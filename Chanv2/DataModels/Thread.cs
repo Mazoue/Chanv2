@@ -62,5 +62,6 @@ namespace Chanv2.DataModels
         public int Imagelimit { get; set; }
         [JsonProperty("trip")]
         public string Trip { get; set; }
+        public bool Checked { get; set; }
     }
 }

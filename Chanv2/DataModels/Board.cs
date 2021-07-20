@@ -87,5 +87,6 @@ namespace Chanv2.DataModels
 
         [JsonProperty("require_subject")]
         public int? RequireSubject { get; set; }
+        public bool Checked { get; set; }
     }
 }
