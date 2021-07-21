@@ -3,10 +3,10 @@
 
 <h1>@DisplayTitle</h1>
 
-<table class="layouttable" style="width:100%">
+<table class="headerlayouttable" style="width:100%">
     <tr>
         <td> <input type="checkbox" @onchange="eventArgs => { CheckAllClicked(); }" />Check All</td>
-        <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadOverview.DownloadPost(@ThreadTitle,@Posts,@BoardId).ConfigureAwait(false))"> Download</button></td>
+        <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadOverview.DownloadPost(@ThreadTitle,@Posts.posts.Where(x => x.Checked),@BoardId).ConfigureAwait(false))"> Download</button></td>
     </tr>
 </table>
 <br />

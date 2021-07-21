@@ -51,6 +51,7 @@
     }
 
     .sidebar {
+        min-width: 250px;
         width: 250px;
         min-height: 100vh;
         height: 100vh;

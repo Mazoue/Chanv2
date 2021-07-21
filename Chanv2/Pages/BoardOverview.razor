@@ -1,11 +1,12 @@
 ﻿@page "/board/{boardId}"
+@page "/board/{boardId}/{boardName}"
 
-<h1>@BoardId</h1>
+<h1>@BoardTitle</h1>
 
-<table class="layouttable" style="width:100%">
+<table class="headerlayouttable" style="width:100%">
     <tr>
         <td> <input type="checkbox" @onchange="eventArgs => { CheckAllClicked(); }" />Check All</td>
-        <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadThread().ConfigureAwait(false))"> Download</button></td>
+        <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadThreads())"> Download</button></td>
     </tr>
 </table>
 <br />
@@ -22,15 +23,15 @@
     </tr>
     </thead>
     <tbody>
-    @if(BoarCatalogues != null)
+    @if (BoarCatalogs != null)
     {
-        @foreach (var page in BoarCatalogues.ToList())
+        @foreach (var page in BoarCatalogs.ToList())
         {
             foreach (var thread in page.Threads)
             {
-                <tr>                    
+                <tr>
                     <td><button type="button" @onclick="@(() => ExpandThreadPosts(thread))">Expand</button></td>
-                    <td> <input @bind-value="thread.Checked" type="checkbox" /></td>                        
+                    <td> <input @bind-value="thread.Checked" type="checkbox" /></td>
                     <td>@thread.No</td>
                     <td>@thread.Sub</td>
                     <td>@thread.Com</td>
@@ -40,3 +41,5 @@
     }
     </tbody>
 </table>
+
+<DownloadOverview @ref="DownloadOverview"></DownloadOverview>

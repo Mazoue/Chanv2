@@ -3,28 +3,21 @@ using Chanv2.Interfaces;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Chanv2.Services;
 
-namespace Chanv2.Pages
+namespace Chanv2.Bases
 {
-    public partial class DownloadOverview : ComponentBase
+    public class DownloadOverview : ComponentBase
     {
-        //[Parameter]
-        //public Posts Posts { get; set; }
-        //[Parameter]
-        //public string ThreadTitle { get; set; }
-        //[Parameter]
-        //public string BoardName { get; set; }
-
         [Inject]
         private IDownloadService DownloadService { get; set; }
         [Inject]
         private IFileSystemService FileSystemService { get; set; }
 
-
-        public async Task DownloadPost(string threadTitle,Posts posts, string boardId)
+       public async Task DownloadPost(string threadTitle,IEnumerable<Post> posts, string boardId)
         {
             
-                foreach (var post in posts.posts)
+                foreach (var post in posts)
                 {
                     var threadName = DownloadService.CleanInput(threadTitle);
                     var postName = DownloadService.CleanInput(post.filename);

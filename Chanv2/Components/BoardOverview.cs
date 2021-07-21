@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Chanv2.Services;
 
 namespace Chanv2.Pages
 {
@@ -12,6 +13,9 @@ namespace Chanv2.Pages
     {
         [Parameter]
         public string BoardId { get; set; }
+
+        [Parameter]
+        public string BoardName { get; set; }
 
         [Inject]
         private IBoardService BoardService { get; set; }
@@ -27,15 +31,24 @@ namespace Chanv2.Pages
         [Inject]
         private NavigationManager NavManager { get; set; }
 
-        private IEnumerable<Catalogue> BoarCatalogues { get; set; }
+        private string BoardTitle { get; set; }
+        private string ThreadTitle { get; set; }
 
+        private DownloadOverview DownloadOverview { get; set; }
+        private IEnumerable<Catalogue> BoarCatalogs { get; set; }
+
+        protected override void OnInitialized()
+        {
+            DownloadOverview = new DownloadOverview();
+        }
         protected override async Task OnParametersSetAsync()
         {
             if (BoardId != null)
             {
-                BoarCatalogues = await BoardService.GetBoardCatalog(BoardId);
-
+                BoarCatalogs = await BoardService.GetBoardCatalog(BoardId);
             }
+
+            BoardTitle = !string.IsNullOrEmpty(BoardName) ? BoardName : BoardId;
         }
 
         protected void ExpandThreadPosts(Thread currentThread)
@@ -44,44 +57,32 @@ namespace Chanv2.Pages
                 ? $"/thread/{BoardId}/{currentThread.No}/{HttpUtility.UrlEncode(currentThread.Sub)}"
                 : $"/thread/{BoardId}/{currentThread.No}");
         }
-        protected async Task DownloadThread()
+        protected async Task DownloadThreads()
         {
-            foreach (var catalogue in BoarCatalogues)
+            foreach (var catalog in BoarCatalogs)
             {
-                var threads = catalogue.Threads;
+                var threads = catalog.Threads;
 
-                foreach (var thread in threads.Where(x => x.Checked).ToList())
+                foreach (var thread in from thread in threads.Where(x => x.Checked).ToList() let threadTitle = string.IsNullOrEmpty(thread.Sub)
+                    ? thread.No.ToString()
+                    : HttpUtility.UrlDecode(thread.Sub) select thread)
                 {
-                    var threadTitle = string.IsNullOrEmpty(thread.Sub) ? thread.No.ToString() : HttpUtility.UrlDecode(thread.Sub);
-
                     var posts = await ThreadService.GetPostsInThreads(BoardId, thread.No);
-                    foreach (var post in posts.posts.Where(x => x.fsize > 1))
-                    {
-                        var threadName = DownloadService.CleanInput(threadTitle);
-                        var postName = DownloadService.CleanInput(post.filename);
-
-                        var baseFolder = FileSystemService.CreateFileDestination(BoardId, threadName);
-                        var filePath = FileSystemService.GenerateFilePath(baseFolder, postName, post.ext);
-
-                        var fileUrl = $"{BoardId}/{post.tim}{post.ext}";
-                        var downloadResult = await DownloadService.DownloadFileAsync(fileUrl, filePath);
-                    }
+                    await DownloadOverview.DownloadPost(string.IsNullOrEmpty(thread.Sub) ? thread.No.ToString() : HttpUtility.UrlDecode(thread.Sub), posts.posts.Where(x => x.fsize > 1), BoardId).ConfigureAwait(false);
                 }
             }
         }
 
-        void CheckAllClicked()
+        private void CheckAllClicked()
         {
-            foreach (var catalogue in BoarCatalogues)
+            foreach (var catalog in BoarCatalogs)
             {
-                for (var index = 0; index < catalogue.Threads.Length; index++)
+                foreach (var currentThread in catalog.Threads)
                 {
-                    catalogue.Threads[index].Checked = true;
+                    currentThread.Checked = true;
                 }
             }
             StateHasChanged();
         }
-
-
     }
 }
