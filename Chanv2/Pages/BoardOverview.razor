@@ -34,7 +34,7 @@
                     <td> <input @bind-value="thread.Checked" type="checkbox" /></td>
                     <td>@thread.No</td>
                     <td>@thread.Sub</td>
-                    <td>@thread.Com</td>
+                    <td max-width="0" overflow="scroll" text-overflow="ellipsis" white-space="nowrap">@thread.Com</td>
                 </tr>
             }
         }

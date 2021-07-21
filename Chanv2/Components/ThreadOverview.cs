@@ -21,7 +21,7 @@ namespace Chanv2.Pages
         private IThreadService ThreadService { get; set; }
 
         private Posts Posts { get; set; }
-       
+
 
         private string DisplayTitle { get; set; }
 
@@ -43,13 +43,14 @@ namespace Chanv2.Pages
         {
             return bytes / 1024;
         }
-        
+
         void CheckAllClicked()
         {
-            for(var index = 0; index < Posts.posts.ToList().Count; index++)
+            for (var index = 0; index < Posts.posts.ToList().Count; index++)
             {
-                if(Posts.posts[index].fsize > 1) { 
-                Posts.posts[index ].Checked = true;
+                if (Posts.posts[index].fsize > 1)
+                {
+                    Posts.posts[index].Checked = true;
                 }
             }
             StateHasChanged();
