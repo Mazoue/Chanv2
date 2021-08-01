@@ -16,6 +16,5 @@ namespace Chanv2.Shared
         {
             _collapseNavMenu = !_collapseNavMenu;
         }
-
     }
 }

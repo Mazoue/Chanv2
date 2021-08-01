@@ -1,7 +1,12 @@
 ﻿@inherits Chanv2.Bases.DownloadOverview
 
-<h3>DownloadOverview Component</h3>
-
-@code {
-
-}
+<div id="downloadDiv" style="border:1px solid black; ">
+    <h1>Download Overview</h1>
+    <table>
+        <tr>
+            <td>Total File Count: @TotalFileCount</td>
+            <td>Processed File Count: @ProcessedFileCount</td>
+        </tr>
+    </table>
+   <progress value=@ProcessedFileCount Style="margin-bottom: 20px" max=@TotalFileCount> </progress>
+</div>

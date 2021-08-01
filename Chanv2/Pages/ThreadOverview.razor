@@ -6,7 +6,7 @@
 <table class="headerlayouttable" style="width:100%">
     <tr>
         <td> <input type="checkbox" @onchange="eventArgs => { CheckAllClicked(); }" />Check All</td>
-        <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadOverview.DownloadPost(@ThreadTitle,@Posts.posts.Where(x => x.Checked),@BoardId).ConfigureAwait(false))"> Download</button></td>
+        <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadOverview.DownloadPost(@DisplayTitle,@Posts.posts.Where(x => x.Checked),@BoardId).ConfigureAwait(false))"> Download</button></td>
     </tr>
 </table>
 <br />
@@ -34,9 +34,9 @@
                     //HREF - href="//is2.4chan.org/a/1626564017940.jpg"
                     //SRC - src="//i.4cdn.org/a/1626564017940s.jpg
                     //EXAMPLE - <a class="fileThumb" href="//is2.4chan.org/a/1626564017940.jpg" target="_blank"><img src="//i.4cdn.org/a/1626564017940s.jpg" alt="43 KB" data-md5="FLKUH3VbsAcTIDzeqXsg3Q==" style="height: 121px; width: 125px;" loading="lazy">
-                    
+
                     <tr>
-                        <td> <input @bind-value="post.Checked" type="checkbox" /></td>                        
+                        <td> <input @bind=@post.Checked type="checkbox" /></td>
                         <td><a href="//is2.4chan.org/a/1626564017940.jpg" target="_blank"><img src="//i.4cdn.org/a/1626564017940s.jpg" alt="NOT FOUND" style="height: 121px; width: 125px;" loading="lazy"></a></td>
                         <td>@post.no</td>
                         <td>@post.filename.Trim()</td>
@@ -52,3 +52,11 @@
 </table>
 
 <DownloadOverview @ref="DownloadOverview"></DownloadOverview>
+
+
+               
+
+                    
+                    
+
+                    

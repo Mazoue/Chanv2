@@ -1,11 +1,11 @@
 ﻿using Chanv2.DataModels;
 using Chanv2.Interfaces;
 using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using Chanv2.Services;
 
 namespace Chanv2.Pages
 {
@@ -59,17 +59,26 @@ namespace Chanv2.Pages
         }
         protected async Task DownloadThreads()
         {
-            foreach (var catalog in BoarCatalogs)
+            try
             {
-                var threads = catalog.Threads;
-
-                foreach (var thread in from thread in threads.Where(x => x.Checked).ToList() let threadTitle = string.IsNullOrEmpty(thread.Sub)
-                    ? thread.No.ToString()
-                    : HttpUtility.UrlDecode(thread.Sub) select thread)
+                foreach (var catalog in BoarCatalogs)
                 {
-                    var posts = await ThreadService.GetPostsInThreads(BoardId, thread.No);
-                    await DownloadOverview.DownloadPost(string.IsNullOrEmpty(thread.Sub) ? thread.No.ToString() : HttpUtility.UrlDecode(thread.Sub), posts.posts.Where(x => x.fsize > 1), BoardId).ConfigureAwait(false);
+                    var threads = catalog.Threads;
+
+                    foreach (var thread in from thread in threads.Where(x => x.Checked).ToList()
+                                           let threadTitle = string.IsNullOrEmpty(thread.Sub)
+                                            ? thread.No.ToString()
+                                             : HttpUtility.UrlDecode(thread.Sub)
+                                           select thread)
+                    {
+                        var posts = await ThreadService.GetPostsInThreads(BoardId, thread.No);
+                        await DownloadOverview.DownloadPost(string.IsNullOrEmpty(thread.Sub) ? thread.No.ToString() : HttpUtility.UrlDecode(thread.Sub), posts.posts.Where(x => x.fsize > 1), BoardId).ConfigureAwait(false);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                var t = ex;
             }
         }
 

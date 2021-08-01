@@ -18,10 +18,9 @@
         @if (AllBoardDetails?.Boards != null)
         {
             @foreach (var board in AllBoardDetails.Boards)
-            {
-                
-                    var href = string.IsNullOrEmpty(board.Title) ? $"/board/{board.board}" : $"/board/{board.board}/{HttpUtility.UrlEncode(board.Title)}";
-                //var href = string.IsNullOrEmpty(board.Title) ? $"/board/{board.board}" : $"/board/{board.board}/{board.Title.Replace("/"," ")}";
+            {              
+             var href = string.IsNullOrEmpty(board.Title) ? $"/board/{board.board}" : $"/board/{board.board}/{HttpUtility.UrlEncode(board.Title)}";
+               
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href=@href>
                         <span class="oi oi-beaker" aria-hidden="true"></span> @board.Title

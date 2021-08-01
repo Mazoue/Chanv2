@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Chanv2
 {
@@ -12,7 +13,12 @@ namespace Chanv2
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
            Host.CreateDefaultBuilder(args)
-               .ConfigureWebHostDefaults(webBuilder =>
+             .ConfigureLogging(logging =>
+             {
+                 logging.ClearProviders();
+                 logging.AddConsole();
+             })
+             .ConfigureWebHostDefaults(webBuilder =>
                {
                    webBuilder.UseStartup<Startup>();
                });

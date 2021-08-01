@@ -27,6 +27,8 @@ namespace Chanv2.Pages
 
         private DownloadOverview DownloadOverview { get; set; }
 
+        
+
         protected override async Task OnParametersSetAsync()
         {
             if (!string.IsNullOrEmpty(BoardId) && !string.IsNullOrEmpty(ThreadId))
