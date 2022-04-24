@@ -1,11 +1,13 @@
 ﻿@page "/board/{boardId}"
 @page "/board/{boardId}/{boardName}"
 
+@*https://docs.microsoft.com/en-us/dotnet/architecture/blazor-for-web-forms-developers/components*@
+
 <h1>@BoardTitle</h1>
 
 <table class="headerlayouttable" style="width:100%">
     <tr>
-        <td> <input type="checkbox" @onchange="eventArgs => { CheckAllThreads(eventArgs.Value); }" />Check All</td>
+        <td> <input type="checkbox" @onchange="eventArgs => { SelectAllThreads(eventArgs.Value); }" />Select All</td>
         @*<td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadThreads())"> Download</button></td>*@
         
 @*<input type="checkbox"
@@ -37,7 +39,7 @@
                     <td> <input @bind="@thread.Checked" type="checkbox" /></td>
                     <td>@thread.No</td>
                     <td>@thread.Sub</td>
-                    <td style="width:0.5%; overflow:scroll; white-space:normal;text-overflow:inherit">@thread.Com</td>
+                    <td style="width:0.5%; overflow:scroll; white-space:normal;text-overflow:inherit">@((MarkupString)thread.Com)</td>
                 </tr>
             }
         }

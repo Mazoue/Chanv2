@@ -65,5 +65,17 @@ namespace ChanV3.Pages
 
         protected int ConvertBytesToKiloBytes(int bytes) => bytes / 1024;
 
+        private void SelectAllPosts(object isChecked)
+        {
+            foreach(var post in Posts.PostCollection.ToList())
+            {
+                if (post.fsize > 1)
+                {
+                    post.Checked = (bool) isChecked;
+                }
+            }
+            StateHasChanged();
+        }
+
     }
 }

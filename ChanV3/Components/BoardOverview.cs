@@ -44,7 +44,7 @@ namespace ChanV3.Pages
                 : $"/thread/{BoardId}/{currentThread.No}");
 
 
-        private void CheckAllThreads(object isChecked)
+        private void SelectAllThreads(object isChecked)
         {
             foreach (var catalog in Catalogues)
             {

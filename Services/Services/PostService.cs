@@ -15,6 +15,9 @@ namespace Services.Services
 
         public async Task DownloadPostsAsync(string threadTitle, IEnumerable<Post> posts, string boardId)
         {
+            try
+            {
+
             //THIS SHOULD BE LIMITED TO 1 CALL PER SECOND PER THE TOS
             var rateLimit = new SemaphoreSlim(1);
 
@@ -34,6 +37,13 @@ namespace Services.Services
                 await Task.Delay(1000);
                 rateLimit.Release();
             });
+            }
+            catch (Exception ex)
+            {
+
+                var t = ex;
+            }
+
 
         }
     }

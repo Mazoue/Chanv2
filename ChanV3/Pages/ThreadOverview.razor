@@ -5,7 +5,7 @@
 
 <table class="headerlayouttable" style="width:100%">
     <tr>
-         @*<td> <input type="checkbox" @onchange="eventArgs => { CheckAllClicked(); }" />Check All</td>*@
+         <td> <input type="checkbox" @onchange="eventArgs => { SelectAllPosts(eventArgs.Value); }" />Select All</td>
         <td style="text-align:right"><button type="button" @onclick="@(async () => await PostService.DownloadPostsAsync(@DisplayTitle,@Posts.PostCollection.Where(x => x.Checked),@BoardId).ConfigureAwait(false))"> Download</button></td>
    
     </tr>
@@ -45,7 +45,7 @@
                         <td>@post.filename.Trim()</td>
                         <td>@post.ext</td>
                         <td>@ConvertBytesToKiloBytes(@post.fsize)</td>
-                        <td style="overflow-y:scroll;overflow-x:hidden;">@post.com</td>
+                        <td style="overflow-y:scroll;overflow-x:hidden;">@((MarkupString)post.com)</td>
                         <td style="display: none">@(SetImageUsingStreamingAsync(post.tim.ToString(), thumbnailPlaceholderId))</td>
                     </tr>
                 }
