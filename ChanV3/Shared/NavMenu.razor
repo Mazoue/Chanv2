@@ -1,5 +1,4 @@
 ﻿@using System.Web
-@inherits Bases.BoardsOverviewBase
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Chanv3</a>
@@ -17,7 +16,16 @@
         </li>
         @if (AllBoardDetails != null)
         {
-            @foreach (var board in AllBoardDetails)
+            var boards = new List<Models.Chan.Board>();
+                var showWorkSafeOnlyBoards = GeneralConfigService.ShowWorkSafeOnlyBoards();
+            if( showWorkSafeOnlyBoards == true)
+            {
+                boards =  AllBoardDetails.Where(x => Convert.ToBoolean(x.WsBoard) != GeneralConfigService.ShowWorkSafeOnlyBoards()).ToList();
+            }else
+            {
+                boards = AllBoardDetails.ToList();
+            }
+            @foreach (var board in boards)
             {              
              var href = string.IsNullOrEmpty(board.Title) ? $"/board/{board.board}" : $"/board/{board.board}/{HttpUtility.UrlEncode(board.Title)}";
                

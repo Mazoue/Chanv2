@@ -18,16 +18,9 @@ namespace ChanV3.Pages
         [Inject]
         private IBoardService BoardService { get; set; }
 
-
         private string BoardTitle { get; set; }
-        private string ThreadTitle { get; set; }
-
 
         private IEnumerable<Catalogue> Catalogues { get; set; }
-
-        protected override void OnInitialized()
-        {
-        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -46,17 +39,14 @@ namespace ChanV3.Pages
 
         private void SelectAllThreads(object isChecked)
         {
-            foreach (var catalog in Catalogues)
+            foreach(var catalog in Catalogues)
             {
-                foreach (var currentThread in catalog.Threads)
+                foreach(var currentThread in catalog.Threads)
                 {
                     currentThread.Checked = (bool)isChecked;
                 }
             }
             StateHasChanged();
         }
-
-
-
     }
 }

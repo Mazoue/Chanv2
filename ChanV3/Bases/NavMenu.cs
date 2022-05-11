@@ -2,11 +2,12 @@
 using Models.Chan;
 using Services.Interfaces;
 
-namespace ChanV3.Bases
+namespace ChanV3.Shared
 {
-    public class BoardsOverviewBase : ComponentBase
+    public partial class NavMenu
     {
         [Inject] private IBoardService BoardDataService { get; set; }
+        [Inject] private IGeneralConfigService GeneralConfigService { get; set; }
 
         public List<Board> AllBoardDetails { get; set; }
 

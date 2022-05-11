@@ -23,10 +23,16 @@ namespace Chanv3.Startup
                 BaseFolder = Configuration.GetSection("FileSystemConfig")["BaseFolder"]
             };
 
+            var generalConfig = new GeneralConfig()
+            {
+                ShowImagePreview = Convert.ToBoolean(Configuration.GetSection("GeneralConfig")["ShowImagePreview"]),
+                WorkSafeOnlyBoards = Convert.ToBoolean(Configuration.GetSection("GeneralConfig")["WorkSafeOnlyBoards"])
+            };
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.RegisterServices();
+            services.RegisterServices(generalConfig);
             services.RegisterRepositories(apiConfig, fileSystemConfig);
 
         }

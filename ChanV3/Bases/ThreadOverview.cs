@@ -16,14 +16,18 @@ namespace ChanV3.Pages
         [Parameter]
         public string ThreadTitle { get; set; }
 
-        string _thumbnailPlaceHolderId { get; set; }
+        private string _thumbnailPlaceHolderId { get; set; }
 
         [Inject]
         private IThreadService ThreadService { get; set; }
         [Inject]
-        private IPostService PostService { get; set; }
-        [Inject]
         private Microsoft.JSInterop.IJSRuntime jSRuntime { get; set; }
+        [Inject]
+        private IGeneralConfigService GeneralConfigService { get; set; }
+        [Inject]
+        private IPostService PostService { get; set; }
+
+        private DownloadManager downloadManager;
 
         private Posts Posts { get; set; }
 
@@ -36,8 +40,7 @@ namespace ChanV3.Pages
             if(firstRender)
             {
                 // import the script from the file
-                threadOverviewJs = await jSRuntime.InvokeAsync<IJSObjectReference>(
-                    "import", "/Pages/ThreadOverview.razor.js");
+                threadOverviewJs = await jSRuntime.InvokeAsync<IJSObjectReference>("import", "/Pages/ThreadOverview.razor.js");
             }
         }
 
@@ -69,13 +72,15 @@ namespace ChanV3.Pages
         {
             foreach(var post in Posts.PostCollection.ToList())
             {
-                if (post.fsize > 1)
+                if(post.fsize > 1)
                 {
-                    post.Checked = (bool) isChecked;
+                    post.Checked = (bool)isChecked;
                 }
             }
-            StateHasChanged();
         }
+
+        protected async Task DownloadFiles(string threadTitle, IEnumerable<Post> posts, string boardId) => await downloadManager.DownloadFiles(threadTitle, posts, boardId);
+
 
     }
 }

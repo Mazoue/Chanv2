@@ -31,7 +31,6 @@ namespace Services.Services
 
                 var fileUrl = $"{boardId}/{post.tim}{post.ext}";
 
-
                 await rateLimit.WaitAsync();
                 await _downloadService.DownloadFileAsync(fileUrl, filePath);
                 await Task.Delay(1000);
@@ -40,11 +39,8 @@ namespace Services.Services
             }
             catch (Exception ex)
             {
-
                 var t = ex;
             }
-
-
         }
     }
 }

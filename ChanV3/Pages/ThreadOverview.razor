@@ -2,12 +2,13 @@
 @page "/thread/{boardId}/{threadId}/{threadTitle}"
 
 <h1>@DisplayTitle</h1>
-
+<br />
+<br />
+<div id=threadoverviewmain>
 <table class="headerlayouttable" style="width:100%">
     <tr>
          <td> <input type="checkbox" @onchange="eventArgs => { SelectAllPosts(eventArgs.Value); }" />Select All</td>
-        <td style="text-align:right"><button type="button" @onclick="@(async () => await PostService.DownloadPostsAsync(@DisplayTitle,@Posts.PostCollection.Where(x => x.Checked),@BoardId).ConfigureAwait(false))"> Download</button></td>
-   
+         <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadFiles(@DisplayTitle,@Posts.PostCollection.Where(x => x.Checked),@BoardId).ConfigureAwait(false))"> Download</button></td>
     </tr>
 </table>
 <br />
@@ -30,17 +31,19 @@
             var thumbnailPlaceholderCount = 0;
 
             foreach (var post in Posts.PostCollection.ToList())
-            {
-                
+            {                
                 if (@post.fsize > 1)
-                {
-                    thumbnailPlaceholderCount+=1;  
+                {                    
                     var thumbnailPlaceholderId = $"thumbnailPlaceholderId{thumbnailPlaceholderCount}";
-                    //href works but redirects to captcha
-                    
                     <tr>                        
-                        <td> <input @bind=@post.Checked type="checkbox" /></td>                           
-                        <td><img id="@_thumbnailPlaceHolderId" /></td>
+                        <td> <input @bind=@post.Checked type="checkbox" /></td>
+                        @if(GeneralConfigService.ShowImagePreview()){
+                                <td><img id="@_thumbnailPlaceHolderId" /></td>
+                            }
+                            else
+                            {
+                                <td>Hiding Preview to increase speed</td>
+                            }
                         <td>@post.no</td>
                         <td>@post.filename.Trim()</td>
                         <td>@post.ext</td>
@@ -48,9 +51,12 @@
                         <td style="overflow-y:scroll;overflow-x:hidden;">@((MarkupString)post.com)</td>
                         <td style="display: none">@(SetImageUsingStreamingAsync(post.tim.ToString(), thumbnailPlaceholderId))</td>
                     </tr>
+                    thumbnailPlaceholderCount+=1;  
                 }
             }
         }
     </tbody>
 </table>
+</div>
 
+ <DownloadManager @ref="downloadManager"></DownloadManager>       
