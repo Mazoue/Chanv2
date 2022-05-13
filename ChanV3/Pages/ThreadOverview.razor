@@ -8,7 +8,7 @@
 <table class="headerlayouttable" style="width:100%">
     <tr>
          <td> <input type="checkbox" @onchange="eventArgs => { SelectAllPosts(eventArgs.Value); }" />Select All</td>
-         <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadFiles(@DisplayTitle,@Posts.PostCollection.Where(x => x.Checked),@BoardId).ConfigureAwait(false))"> Download</button></td>
+         <td style="text-align:right"><button type="button" @onclick="@(async () => await DownloadFiles(@DisplayTitle,@Posts.PostCollection.Where(x => x.Checked),@BoardId))"> Download</button></td>
     </tr>
 </table>
 <br />
@@ -59,4 +59,4 @@
 </table>
 </div>
 
- <DownloadManager @ref="downloadManager"></DownloadManager>       
+ <DownloadManager @ref="downloadManager"></DownloadManager>

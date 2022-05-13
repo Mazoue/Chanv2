@@ -18,6 +18,8 @@ namespace ChanV3.Pages
         [Inject]
         private IBoardService BoardService { get; set; }
 
+        private readonly DownloadManager downloadManager;
+
         private string BoardTitle { get; set; }
 
         private IEnumerable<Catalogue> Catalogues { get; set; }
@@ -47,6 +49,15 @@ namespace ChanV3.Pages
                 }
             }
             StateHasChanged();
+        }
+
+        protected async Task DownloadCatalogue(IEnumerable<Catalogue> catalogues)
+        {
+
+            foreach(var catalogue in catalogues.Where(x => x.Threads.All(y => y.Checked ==true)))
+            {
+                await downloadManager.DownloadCatalogue(catalogue, BoardId);
+            }
         }
     }
 }

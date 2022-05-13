@@ -8,5 +8,6 @@ namespace Models.Chan
         public int Page { get; set; }
         [JsonProperty("Threads")]
         public ChanThread[] Threads { get; set; }
+        public bool Checked { get; set; }
     }
 }
