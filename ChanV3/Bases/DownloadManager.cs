@@ -30,17 +30,17 @@ namespace ChanV3.Pages
 
         }
 
-        public async Task DownloadCatalogue(Catalogue? catalogue, string boardId)
+        public async Task DownloadThread(ChanThread? thread, string boardId)
         {
 
             ShowDownloadManager = true;
 
             StateHasChanged();
 
-            foreach(var thread in catalogue?.Threads)
+            if (int.TryParse(thread.No, out var threadNumber))
             {
-                var posts = await ThreadService.GetPostsInThreads(boardId, thread.No);
-                await DownloadFiles(HttpUtility.UrlEncode(thread.Sub), posts.PostCollection, boardId);
+                var posts = await ThreadService.GetPostsInThreads(boardId, threadNumber);
+                await DownloadFiles(HttpUtility.UrlEncode(thread.Sub), posts, boardId);
             }
         }
     }

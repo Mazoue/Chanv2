@@ -53,10 +53,15 @@ namespace ChanV3.Pages
 
         protected async Task DownloadCatalogue(IEnumerable<Catalogue> catalogues)
         {
-
-            foreach(var catalogue in catalogues.Where(x => x.Threads.All(y => y.Checked ==true)))
+            foreach (var catalogue in catalogues)
             {
-                await downloadManager.DownloadCatalogue(catalogue, BoardId);
+                foreach (var thread in catalogue.Threads)
+                {
+                    if (thread.Checked == true)
+                    {
+                        await downloadManager.DownloadThread(thread, BoardId);
+                    }
+                }
             }
         }
     }
