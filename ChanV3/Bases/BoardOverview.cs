@@ -18,7 +18,7 @@ namespace ChanV3.Pages
         [Inject]
         private IBoardService BoardService { get; set; }
 
-        private readonly DownloadManager downloadManager;
+        private DownloadManager downloadManager;
 
         private string BoardTitle { get; set; }
 
@@ -57,7 +57,7 @@ namespace ChanV3.Pages
             {
                 foreach (var thread in catalogue.Threads)
                 {
-                    if (thread.Checked == true)
+                    if (thread.Checked == true && downloadManager != null)
                     {
                         await downloadManager.DownloadThread(thread, BoardId);
                     }

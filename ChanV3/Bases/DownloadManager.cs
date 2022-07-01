@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Models.Chan;
 using Services.Interfaces;
+using System.Collections.Concurrent;
 using System.Web;
 
 namespace ChanV3.Pages
@@ -13,18 +14,30 @@ namespace ChanV3.Pages
         [Inject]
         private IThreadService ThreadService { get; set; }
 
-        private List<Post> Posts { get; set; }
+        private ConcurrentBag<Post> Posts { get; set; }
 
         private bool ShowDownloadManager { get; set; }
 
         public async Task DownloadFiles(string threadTitle, IEnumerable<Post> posts, string boardId)
         {
-
             ShowDownloadManager = true;
 
             StateHasChanged();
-
-            Posts = posts.ToList();
+            if (Posts == null)
+            {
+                Posts = new ConcurrentBag<Post>();
+                foreach(var post in posts)
+                {
+                    Posts.Add(post);
+                }
+            }
+            else
+            {
+                foreach (var post in posts)
+                {
+                    Posts.Add(post);
+                }
+            }
 
             await PostService.DownloadPostsAsync(threadTitle, posts, boardId);
 
@@ -37,10 +50,10 @@ namespace ChanV3.Pages
 
             StateHasChanged();
 
-            if (int.TryParse(thread.No, out var threadNumber))
+            if (int.TryParse(thread.No.ToString(), out var threadNumber))
             {
                 var posts = await ThreadService.GetPostsInThreads(boardId, threadNumber);
-                await DownloadFiles(HttpUtility.UrlEncode(thread.Sub), posts, boardId);
+                await DownloadFiles(HttpUtility.UrlEncode(thread.Sub), posts.PostCollection, boardId);
             }
         }
     }

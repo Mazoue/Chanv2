@@ -7,8 +7,8 @@ namespace Services.Services
     {
         private readonly IDownloadService _downloadService;
 
-        public PostService(IDownloadService downloadService) 
-        { 
+        public PostService(IDownloadService downloadService)
+        {
             _downloadService = downloadService;
         }
         public async Task<Stream> GetImageThumbnailAsync(string boardId, string imageId) => await _downloadService.GetImageThumbnailAsync(boardId, imageId);
@@ -17,25 +17,27 @@ namespace Services.Services
         {
             try
             {
+                //THIS SHOULD BE LIMITED TO 1 CALL PER SECOND PER THE TOS
+                var rateLimit = new SemaphoreSlim(1);
 
-            //THIS SHOULD BE LIMITED TO 1 CALL PER SECOND PER THE TOS
-            var rateLimit = new SemaphoreSlim(1);
+                Parallel.ForEach(posts, async post =>
+                {
+                    if (post.images != 0)
+                    {
+                        var threadName = !string.IsNullOrEmpty(threadTitle) ? _downloadService.CleanInput(threadTitle) : "Untitled";
+                        var postName = !string.IsNullOrEmpty(post.filename) ? _downloadService.CleanInput(post.filename) : $@"{Guid.NewGuid()}"; ;
 
-            Parallel.ForEach(posts, async post =>
-            {
-                var threadName = _downloadService.CleanInput(threadTitle);
-                var postName = _downloadService.CleanInput(post.filename);
+                        var baseFolder = _downloadService.CreateFileDestination(boardId, threadName);
+                        var filePath = _downloadService.GenerateFilePath(baseFolder, postName, post.ext);
 
-                var baseFolder = _downloadService.CreateFileDestination(boardId, threadName);
-                var filePath = _downloadService.GenerateFilePath(baseFolder, postName, post.ext);
+                        var fileUrl = $"{boardId}/{post.tim}{post.ext}";
 
-                var fileUrl = $"{boardId}/{post.tim}{post.ext}";
-
-                await rateLimit.WaitAsync();
-                await _downloadService.DownloadFileAsync(fileUrl, filePath);
-                await Task.Delay(1000);
-                rateLimit.Release();
-            });
+                        await rateLimit.WaitAsync();
+                        await _downloadService.DownloadFileAsync(fileUrl, filePath);
+                        await Task.Delay(1000);
+                        rateLimit.Release();
+                    }
+                });
             }
             catch (Exception ex)
             {
