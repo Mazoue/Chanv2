@@ -37,7 +37,6 @@ namespace Services.Services
             // Replace invalid characters with empty strings.
             try
             {
-                input = input.Replace(".", "");
                 return Regex.Replace(input, @"[^\w\.@-]", "",
                     RegexOptions.None, TimeSpan.FromSeconds(1.5));
             }

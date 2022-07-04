@@ -16,8 +16,8 @@
         </tr>
     </thead>
     <tbody>
-        @if(Posts != null){
-           foreach (var post in Posts)
+        @if(Posts != null && Posts.Any()){
+           @foreach (var post in Posts)
             {                
                 if (@post.fsize > 1)
                 {                    
@@ -29,7 +29,7 @@
                     </tr>                    
                 }
             }
-                }
+         }
      </tbody>
     </table>
 </div>

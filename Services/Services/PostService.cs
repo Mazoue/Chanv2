@@ -1,4 +1,4 @@
-﻿using Models.Chan;
+﻿using Models.Downloads;
 using Services.Interfaces;
 
 namespace Services.Services
@@ -7,39 +7,38 @@ namespace Services.Services
     {
         private readonly IDownloadService _downloadService;
 
-        public PostService(IDownloadService downloadService)
-        {
-            _downloadService = downloadService;
-        }
+        public PostService(IDownloadService downloadService) => _downloadService = downloadService;
         public async Task<Stream> GetImageThumbnailAsync(string boardId, string imageId) => await _downloadService.GetImageThumbnailAsync(boardId, imageId);
 
-        public async Task DownloadPostsAsync(string threadTitle, IEnumerable<Post> posts, string boardId)
+        public async Task DownloadPostsAsync(DownloadRequest downloadRequest)
         {
             try
             {
                 //THIS SHOULD BE LIMITED TO 1 CALL PER SECOND PER THE TOS
                 var rateLimit = new SemaphoreSlim(1);
-
-                Parallel.ForEach(posts, async post =>
+                Parallel.ForEach(downloadRequest.Threads, async thread =>
                 {
-                    if (post.images != 0)
+                    Parallel.ForEach(thread.Posts, async post =>
                     {
-                        var threadName = !string.IsNullOrEmpty(threadTitle) ? _downloadService.CleanInput(threadTitle) : "Untitled";
-                        var postName = !string.IsNullOrEmpty(post.filename) ? _downloadService.CleanInput(post.filename) : $@"{Guid.NewGuid()}"; ;
+                        if(post.images > 0)
+                        {
+                            var threadName = !string.IsNullOrEmpty(thread.ThreadTitle) ? _downloadService.CleanInput(thread.ThreadTitle) : "No Title";
+                            var postName = _downloadService.CleanInput(post.filename);
 
-                        var baseFolder = _downloadService.CreateFileDestination(boardId, threadName);
-                        var filePath = _downloadService.GenerateFilePath(baseFolder, postName, post.ext);
+                            var baseFolder = _downloadService.CreateFileDestination(thread.BoardId, threadName);
+                            var filePath = _downloadService.GenerateFilePath(baseFolder, postName, post.ext);
 
-                        var fileUrl = $"{boardId}/{post.tim}{post.ext}";
+                            var fileUrl = $"{thread.BoardId}/{post.tim}{post.ext}";
 
-                        await rateLimit.WaitAsync();
-                        await _downloadService.DownloadFileAsync(fileUrl, filePath);
-                        await Task.Delay(1000);
-                        rateLimit.Release();
-                    }
+                            await rateLimit.WaitAsync();
+                            await _downloadService.DownloadFileAsync(fileUrl, filePath);
+                            await Task.Delay(1000);
+                            rateLimit.Release();
+                        }
+                    });
                 });
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 var t = ex;
             }

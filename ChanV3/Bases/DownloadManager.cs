@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Models.Chan;
+using Models.Downloads;
 using Services.Interfaces;
-using System.Collections.Concurrent;
 using System.Web;
 
 namespace ChanV3.Pages
@@ -14,46 +14,55 @@ namespace ChanV3.Pages
         [Inject]
         private IThreadService ThreadService { get; set; }
 
-        private ConcurrentBag<Post> Posts { get; set; }
+        private List<Post> Posts { get; set; }
 
         private bool ShowDownloadManager { get; set; }
 
-        public async Task DownloadFiles(string threadTitle, IEnumerable<Post> posts, string boardId)
+        public async Task DownloadFiles(DownloadRequest downloadRequest)
         {
+
             ShowDownloadManager = true;
 
             StateHasChanged();
-            if (Posts == null)
+
+            if(Posts == null)
             {
-                Posts = new ConcurrentBag<Post>();
-                foreach(var post in posts)
+                Posts = new List<Post>();
+            }
+
+            foreach(var thread in downloadRequest.Threads)
+            {
+                foreach(var post in thread.Posts)
                 {
                     Posts.Add(post);
                 }
             }
-            else
-            {
-                foreach (var post in posts)
-                {
-                    Posts.Add(post);
-                }
-            }
-
-            await PostService.DownloadPostsAsync(threadTitle, posts, boardId);
-
+            await PostService.DownloadPostsAsync(downloadRequest);
         }
 
-        public async Task DownloadThread(ChanThread? thread, string boardId)
+        public async Task DownloadCatalogue(Catalogue? catalogue, string boardId)
         {
-
-            ShowDownloadManager = true;
-
-            StateHasChanged();
-
-            if (int.TryParse(thread.No.ToString(), out var threadNumber))
+            if(!ShowDownloadManager)
             {
-                var posts = await ThreadService.GetPostsInThreads(boardId, threadNumber);
-                await DownloadFiles(HttpUtility.UrlEncode(thread.Sub), posts.PostCollection, boardId);
+                ShowDownloadManager = true;
+                StateHasChanged();
+            }
+
+            foreach(var thread in catalogue?.Threads)
+            {
+                var posts = await ThreadService.GetPostsInThreads(boardId, thread.No);
+                await DownloadFiles(new DownloadRequest()
+                {
+                    Threads = new List<DownloadRequestThreadDetails>()
+                    {
+                        new DownloadRequestThreadDetails()
+                        {
+                            ThreadTitle = HttpUtility.UrlEncode(thread.Sub),
+                            BoardId = boardId,
+                            Posts = posts.PostCollection
+                        }
+                    }
+                });
             }
         }
     }
