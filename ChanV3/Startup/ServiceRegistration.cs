@@ -11,6 +11,7 @@ namespace ChanV3.Startup
             services.AddScoped<IBoardService, BoardService>();
             services.AddScoped<IDownloadService, DownloadService>();
             services.AddSingleton<IGeneralConfigService>(e => new GeneralConfigService(generalConfig));
+            services.AddSingleton<ILogService, LogService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IThreadService, ThreadService>();
             return services;

@@ -82,15 +82,13 @@ namespace ChanV3.Pages
 
         protected async Task DownloadFiles(string threadTitle, IEnumerable<Post> posts, string boardId) => await downloadManager.DownloadFiles(new DownloadRequest()
         {
-            Threads = new List<DownloadRequestThreadDetails>()
-                    {
-                        new DownloadRequestThreadDetails()
-{
-                            ThreadTitle =threadTitle,
-                            BoardId = boardId,
-                            Posts = posts
-                        }
-                    }
+            Thread = new DownloadRequestThreadDetails()
+            {
+                ThreadTitle = threadTitle,
+                BoardId = boardId,
+                Posts = posts
+
+            }
         });
     }
 }

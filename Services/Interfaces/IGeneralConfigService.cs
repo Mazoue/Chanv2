@@ -5,5 +5,6 @@
         bool ShowImagePreview();
 
         bool ShowWorkSafeOnlyBoards();
+        string LogBasePath();
     }
 }

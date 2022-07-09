@@ -15,7 +15,7 @@ namespace Chanv3.Startup
             var apiConfig = new ChanApiConfig()
             {
                 BoardBase = Configuration.GetSection("4ChanBaseUrls")["BoardBase"],
-                ImageBase = Configuration.GetSection("4ChanBaseUrls")["ImageBase"],
+                ImageBase = Configuration.GetSection("4ChanBaseUrls")["ImageBase"]
             };
 
             var fileSystemConfig = new FileSystemConfig()
@@ -26,7 +26,8 @@ namespace Chanv3.Startup
             var generalConfig = new GeneralConfig()
             {
                 ShowImagePreview = Convert.ToBoolean(Configuration.GetSection("GeneralConfig")["ShowImagePreview"]),
-                WorkSafeOnlyBoards = Convert.ToBoolean(Configuration.GetSection("GeneralConfig")["WorkSafeOnlyBoards"])
+                WorkSafeOnlyBoards = Convert.ToBoolean(Configuration.GetSection("GeneralConfig")["WorkSafeOnlyBoards"]),
+                LogBasePath = Configuration.GetSection("GeneralConfig")["LogBasePath"]
             };
 
             services.AddRazorPages();

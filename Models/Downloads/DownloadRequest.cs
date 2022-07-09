@@ -2,6 +2,6 @@
 {
     public class DownloadRequest
     {
-        public IEnumerable<DownloadRequestThreadDetails> Threads { get; set; }
+        public DownloadRequestThreadDetails Thread { get; set; }
     }
 }

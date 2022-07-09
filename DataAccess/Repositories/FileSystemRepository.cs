@@ -5,10 +5,7 @@ namespace DataAccess.Repositories
     public class FileSystemRepository : IFileSystemRepository
     {
         private readonly string _baseFolder;
-        public FileSystemRepository(string baseFolder)
-        {
-            _baseFolder = baseFolder;
-        }
+        public FileSystemRepository(string baseFolder) => _baseFolder = baseFolder;
         public string CreateFileDestination(string boardName, string threadName)
         {
             //Base Folder
@@ -32,9 +29,6 @@ namespace DataAccess.Repositories
             return filePath;
         }
 
-        public async Task WriteImageToDestination(string destination, byte[] data)
-        {
-            await File.WriteAllBytesAsync(destination, data);
-        }
+        public async Task WriteImageToDestination(string destination, byte[] data) => await File.WriteAllBytesAsync(destination, data);
     }
 }

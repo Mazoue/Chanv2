@@ -19,18 +19,20 @@ namespace Services.Services
         public async Task DownloadFileAsync(string fileUrl, string destination)
         {
             var imageResponse = await _contentRepository.GetImage(fileUrl);
-            await _fileSystemRepository.WriteImageToDestination(destination, imageResponse);
+
+            if(imageResponse != null)
+            {
+                await _fileSystemRepository.WriteImageToDestination(destination, imageResponse);
+            }
         }
 
         public string CreateFileDestination(string boardId, string threadName)
         {
+            threadName = FormatThreadTitle(threadName);
             return _fileSystemRepository.CreateFileDestination(boardId, threadName);
         }
 
-        public string GenerateFilePath(string baseFolder, string fileName, string fileExtension)
-        {
-            return _fileSystemRepository.GenerateFilePath(baseFolder,fileName,fileExtension);
-        }
+        public string GenerateFilePath(string baseFolder, string fileName, string fileExtension) => _fileSystemRepository.GenerateFilePath(baseFolder, fileName, fileExtension);
 
         public string CleanInput(string input)
         {
@@ -42,10 +44,22 @@ namespace Services.Services
             }
             // If we timeout when replacing invalid characters, 
             // we should return Empty.
-            catch (RegexMatchTimeoutException)
+            catch(RegexMatchTimeoutException)
             {
                 return string.Empty;
             }
-        }        
+        }
+
+        private string FormatThreadTitle(string input)
+        {
+            if(input.Contains("2f"))
+                input = input.Replace("2f", " ");
+            if(input.Contains("2c"))
+                input = input.Replace("2c", " ");
+
+            input = input.Trim();
+
+            return input;
+        }
     }
 }

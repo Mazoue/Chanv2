@@ -3,6 +3,6 @@
     public interface IContentRepository
     {
         Task<Stream> GetImageThumbnail(string boardId, string imageId);
-        Task<byte[]> GetImage(string fileUrl);        
+        Task<byte[]?> GetImage(string fileUrl);
     }
 }

@@ -20,49 +20,60 @@ namespace ChanV3.Pages
 
         public async Task DownloadFiles(DownloadRequest downloadRequest)
         {
-
-            ShowDownloadManager = true;
-
-            StateHasChanged();
+            CheckState();
 
             if(Posts == null)
             {
                 Posts = new List<Post>();
             }
 
-            foreach(var thread in downloadRequest.Threads)
+            foreach(var post in downloadRequest.Thread.Posts)
             {
-                foreach(var post in thread.Posts)
-                {
-                    Posts.Add(post);
-                }
+                Posts.Add(post);
             }
-            await PostService.DownloadPostsAsync(downloadRequest);
+
+            var downloads = PostService.GenerateDownloads(downloadRequest);
+
+            if(downloads != null && downloads.Any())
+            {
+                await PostService.DownloadPostsAsync(downloads);
+            }
         }
 
         public async Task DownloadCatalogue(Catalogue? catalogue, string boardId)
         {
-            if(!ShowDownloadManager)
+            if(catalogue != null)
             {
-                ShowDownloadManager = true;
-                StateHasChanged();
-            }
-
-            foreach(var thread in catalogue?.Threads)
-            {
-                var posts = await ThreadService.GetPostsInThreads(boardId, thread.No);
-                await DownloadFiles(new DownloadRequest()
+                foreach(var thread in catalogue.Threads)
                 {
-                    Threads = new List<DownloadRequestThreadDetails>()
+                    var posts = await ThreadService.GetPostsInThreads(boardId, thread.No);
+                    await DownloadFiles(new DownloadRequest()
                     {
-                        new DownloadRequestThreadDetails()
+                        Thread = new DownloadRequestThreadDetails()
                         {
                             ThreadTitle = HttpUtility.UrlEncode(thread.Sub),
                             BoardId = boardId,
                             Posts = posts.PostCollection
                         }
-                    }
-                });
+                    });
+                }
+            }
+        }
+
+        public async Task DownloadBoard(BoardDownloadRequest boardDownloadRequest)
+        {
+            foreach(var catalogue in boardDownloadRequest.Catalogues)
+            {
+                await DownloadCatalogue(catalogue, boardDownloadRequest.BoardId);
+            }
+        }
+
+        private void CheckState()
+        {
+            if(!ShowDownloadManager)
+            {
+                ShowDownloadManager = true;
+                StateHasChanged();
             }
         }
     }

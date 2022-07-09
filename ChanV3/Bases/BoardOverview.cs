@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Models.Chan;
+using Models.Downloads;
 using Services.Interfaces;
 using System.Web;
 
@@ -45,7 +46,9 @@ namespace ChanV3.Pages
             {
                 foreach(var currentThread in catalog.Threads)
                 {
+
                     currentThread.Checked = (bool)isChecked;
+
                 }
             }
             StateHasChanged();
@@ -53,11 +56,19 @@ namespace ChanV3.Pages
 
         protected async Task DownloadCatalogue(IEnumerable<Catalogue> catalogues)
         {
+            var boardDownloadRequest = new BoardDownloadRequest()
+            {
+                BoardId = BoardId,
+                Catalogues = new List<Catalogue?>()
+            };
+
             //This is running multiple instances
             foreach(var catalogue in catalogues.Where(x => x.Threads.All(y => y.Checked == true)))
             {
-                await downloadManager.DownloadCatalogue(catalogue, BoardId);
+                boardDownloadRequest.Catalogues.Add(catalogue);
             }
+
+            await downloadManager.DownloadBoard(boardDownloadRequest);
         }
     }
 }
